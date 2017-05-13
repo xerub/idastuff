@@ -1,4 +1,4 @@
-# Print ARM64_SYSREG using symbolic names.
+# Print ARM sysregs using symbolic names.
 #
 # Copyright (c) 2017 xerub.  All rights reserved
 
@@ -12,7 +12,7 @@ hexnight_cb_info = None
 hexnight_cb = None
 
 # generated from capstone/arch/AArch64/AArch64BaseInfo.h
-regs = {
+regs64 = {
                                   # Op0 Op1  CRn   CRm   Op2
     0x9808 : "MDCCSR_EL0",        # 10  011  0000  0001  000
     0x9828 : "DBGDTRRX_EL0",      # 10  011  0000  0101  000
@@ -591,10 +591,215 @@ regs = {
     0xe66f : "ICH_LR15_EL2",      # 11  100  1100  1101  111
     0xff90 : "CPM_IOACC_CTL_EL3"
 }
+
+# generated from https://github.com/gdelugre/ida-arm-system-highlight
+regs32 = {
+                                # cpnum Op1  CRn   CRm   Op2
+                                # 1111  111  1111  1111  111
+    0x38000 : "DBGDIDR",
+    0x38002 : "DBGDTRRX",
+    0x38004 : "DBGBVR0",
+    0x38005 : "DBGBCR0",
+    0x38006 : "DBGWVR0",
+    0x38007 : "DBGWCR0",
+    0x38008 : "DBGDSCR",
+    0x3800c : "DBGBVR1",
+    0x3800d : "DBGBCR1",
+    0x3800e : "DBGWVR1",
+    0x3800f : "DBGWCR1",
+    0x38012 : "DBGDSCR",
+    0x38014 : "DBGBVR2",
+    0x38015 : "DBGBCR2",
+    0x38016 : "DBGWVR2",
+    0x38017 : "DBGWCR2",
+    0x3801a : "DBGDTRTX",
+    0x3801c : "DBGBVR3",
+    0x3801d : "DBGBCR3",
+    0x3801e : "DBGWVR3",
+    0x3801f : "DBGWCR3",
+    0x38021 : "DBGBXVR0",
+    0x38024 : "DBGBVR4",
+    0x38025 : "DBGBCR4",
+    0x38028 : "DBGDTRRX",
+    0x38029 : "DBGBXVR1",
+    0x3802c : "DBGBVR5",
+    0x3802d : "DBGBCR5",
+    0x38030 : "DBGWFAR",
+    0x38038 : "DBGVCR",
+    0x38080 : "DBGDRAR",
+    0x38084 : "DBGOSLAR",
+    0x38084 : "DBGOSLSR",
+    0x3809c : "DBGOSDLR",
+    0x380a4 : "DBGPRCR",
+    0x38100 : "DBGDSAR",
+    0x38387 : "DBGDEVID2",
+    0x3838f : "DBGDEVID1",
+    0x383f6 : "DBGAUTHSTATUS",
+    0x38397 : "DBGDEVID",
+    0x3c000 : "MIDR",
+    0x3c001 : "CTR",
+    0x3c002 : "TCMTR",
+    0x3c003 : "TLBTR",
+    0x3c004 : "MIDR",
+    0x3c005 : "MPIDR",
+    0x3c006 : "REVIDR",
+    0x3c007 : "MIDR",
+    0x3c008 : "ID_PFR0",
+    0x3c009 : "ID_PFR1",
+    0x3c00a : "ID_DFR0",
+    0x3c00b : "ID_AFR0",
+    0x3c00c : "ID_MMFR0",
+    0x3c00d : "ID_MMFR1",
+    0x3c00e : "ID_MMFR2",
+    0x3c00f : "ID_MMFR3",
+    0x3c010 : "ID_ISAR0",
+    0x3c011 : "ID_ISAR1",
+    0x3c012 : "ID_ISAR2",
+    0x3c013 : "ID_ISAR3",
+    0x3c014 : "ID_ISAR4",
+    0x3c015 : "ID_ISAR5",
+    0x3c800 : "CCSIDR",
+    0x3c801 : "CLIDR",
+    0x3c807 : "AIDR",
+    0x3d000 : "CCSELR",
+    0x3e000 : "VPIDR",
+    0x3e005 : "VMPIDR",
+    0x3c080 : "SCTLR",
+    0x3c081 : "ACTLR",
+    0x3c082 : "CPACR",
+    0x3c088 : "SCR",
+    0x3c089 : "SDER",
+    0x3c08a : "NSACR",
+    0x3e080 : "HSCTLR",
+    0x3e081 : "HACTLR",
+    0x3e088 : "HCR",
+    0x3e089 : "HDCR",
+    0x3e08a : "HCPTR",
+    0x3e08b : "HSTR",
+    0x3e08f : "HACR",
+    0x3c510 : "MAIR0",
+    0x3c511 : "MAIR1",
+    0x3c518 : "AMAIR0",
+    0x3c519 : "AMAIR1",
+    0x3e510 : "HMAIR0",
+    0x3e511 : "HMAIR1",
+    0x3e518 : "HAMAIR0",
+    0x3e519 : "HAMAIR1",
+    0x3c600 : "VBAR",
+    0x3c601 : "MVBAR",
+    0x3c608 : "ISR",
+    0x3e600 : "HVBAR",
+    0x3c680 : "FCSEIDR",
+    0x3c681 : "CONTEXTIDR",
+    0x3c682 : "TPIDRURW",
+    0x3c683 : "TPIDRURO",
+    0x3c684 : "TPIDRPRW",
+    0x3e682 : "HTPIDR",
+    0x3c700 : "CNTFRQ",
+    0x3c780 : "IL1Data0",
+    0x3c781 : "IL1Data1",
+    0x3c782 : "IL1Data2",
+    0x3c788 : "DL1Data0",
+    0x3c789 : "DL1Data1",
+    0x3c78a : "DL1Data2",
+    0x3c7e1 : "CCNT",
+    0x3c7e2 : "PMN0",
+    0x3c7e3 : "PMN1",
+    0x3c7a0 : "RAMINDEX",
+    0x3cf80 : "L2ACTLR",
+    0x3cf83 : "L2FPR",
+    0x3e780 : "CBAR",
+    0x3c100 : "TTBR0",
+    0x3c101 : "TTBR1",
+    0x3e102 : "HTCR",
+    0x3e10a : "VTCR",
+    0x3c180 : "DACR",
+    0x3c280 : "DFSR",
+    0x3c281 : "IFSR",
+    0x3c288 : "ADFSR",
+    0x3c288 : "AIFSR",
+    0x3e288 : "HADFSR",
+    0x3e289 : "HAIFSR",
+    0x3e290 : "HSR",
+    0x3c300 : "DFAR",
+    0x3c302 : "IFAR",
+    0x3e300 : "HDFAR",
+    0x3e302 : "HIFAR",
+    0x3e304 : "HPFAR",
+    0x3c384 : "NOP",
+    0x3c388 : "ICIALLUIS",
+    0x3c38e : "BPIALLIS",
+    0x3c3d1 : "DCCMVAC",
+    0x3c3d2 : "DCCSW",
+    0x3c3d4 : "CP15DSB",
+    0x3c3d5 : "CP15DMB",
+    0x3c3d9 : "DCCMVAU",
+    0x3c3e9 : "NOP",
+    0x3c3f1 : "DCCIMVAC",
+    0x3c3f2 : "DCCISW",
+    0x3c3a0 : "PAR",
+    0x3c3a8 : "ICIALLU",
+    0x3c3a9 : "ICIMVAU",
+    0x3c3ac : "CP15ISB",
+    0x3c3ae : "BPIALL",
+    0x3c3af : "BPIMVA",
+    0x3c3b1 : "DCIMVAC",
+    0x3c3b2 : "DCISW",
+    0x3c3c0 : "ATS1CPR",
+    0x3c3c1 : "ATS1CPW",
+    0x3c3c2 : "ATS1CUR",
+    0x3c3c3 : "ATS1CUW",
+    0x3c3c4 : "ATS12NSOPR",
+    0x3c3c5 : "ATS12NSOPW",
+    0x3c3c6 : "ATS12NSOUR",
+    0x3c3c7 : "ATS12NSOUW",
+    0x3e3c0 : "ATS1HR",
+    0x3e3c1 : "ATS1HR",
+    0x3c418 : "TLBIALLIS",
+    0x3c419 : "TLBIMVAIS",
+    0x3c41a : "TLBIASIDIS",
+    0x3c41b : "TLBIMVAAIS",
+    0x3c428 : "ITLBIALL",
+    0x3c429 : "ITLBIMVA",
+    0x3c42a : "ITLBIASID",
+    0x3c430 : "DTLBIALL",
+    0x3c431 : "DTLBIMVA",
+    0x3c432 : "DTLBIASID",
+    0x3c438 : "TLBIALL",
+    0x3c439 : "TLBIMVA",
+    0x3c43a : "TLBIASID",
+    0x3c43b : "TLBIMVAA",
+    0x3e418 : "TLBIALLHIS",
+    0x3e419 : "TLBIMVAHIS",
+    0x3e41c : "TLBIALLNSNHIS",
+    0x3e438 : "TLBIALLH",
+    0x3e439 : "TLBIMVAH",
+    0x3e43c : "TLBIALLNSNH",
+    0x3c4e0 : "PMCR",
+    0x3c4e1 : "PMNCNTENSET",
+    0x3c4e2 : "PMNCNTENCLR",
+    0x3c4e3 : "PMOVSR",
+    0x3c4e4 : "PMSWINC",
+    0x3c4e5 : "PMSELR",
+    0x3c4e6 : "PMCEID0",
+    0x3c4e7 : "PMCEID1",
+    0x3c4e8 : "PMCCNTR",
+    0x3c4e9 : "PMXEVTYPER",
+    0x3c4ea : "PMXEVCNTR",
+    0x3c4f0 : "PMUSERENR",
+    0x3c4f1 : "PMINTENSET",
+    0x3c4f2 : "PMINTENCLR",
+    0x3c4f3 : "PMOVSSET",
+    0x3cc82 : "L2CTLR",
+    0x3cc83 : "L2ECTLR",
+}
+
 shifts = [ 14, 11, 7, 3, 0 ]
+shiftz = [ 14, 11, -1, 7, 3, 0 ]
 
 inttype = None
-myenum = "ARM64_SYSREG_aenum"
+myenum64 = None
+myenum32 = None
 
 class cblock_visitor_t(idaapi.ctree_visitor_t):
     def __init__(self):
@@ -605,7 +810,7 @@ class cblock_visitor_t(idaapi.ctree_visitor_t):
         try:
             if expr.op == idaapi.cot_call and expr.x.op == idaapi.cot_helper:
                 #print idaapi.tag_remove(expr.x.print1(None))
-                if expr.x.helper == "ARM64_SYSREG" and len(expr.a) == 5:
+                if expr.x.helper == "ARM64_SYSREG" and len(expr.a) == 5: # and idaapi.getseg(expr.ea).use64():
                     reg = 0
                     for j, i in enumerate(expr.a):
                         if i.type != inttype:
@@ -613,7 +818,7 @@ class cblock_visitor_t(idaapi.ctree_visitor_t):
                         #print i.n.value(i.type)
                         reg = reg | (i.numval() << shifts[j])
                     else:
-                        if reg in regs.keys():
+                        if reg in regs64.keys():
                             # apparently, we cannot change the name
                             # so remove all params but the first one,
                             # make it symbolic, and set its value accordingly
@@ -621,12 +826,62 @@ class cblock_visitor_t(idaapi.ctree_visitor_t):
                                 expr.a.pop_back()
                             expr.a[0].n.nf.flags = idaapi.enumflag()
                             expr.a[0].n.nf.serial = 0
-                            expr.a[0].n.nf.type_name = myenum
+                            expr.a[0].n.nf.type_name = self.mkenu64()
                             expr.a[0].n._value = reg
                             #print "ok"
+                if expr.x.helper == "__mrc" and len(expr.a) == 5: # and not idaapi.getseg(expr.ea).use64():
+                    reg = 0
+                    for j, i in enumerate(expr.a):
+                        if i.type != inttype:
+                            break
+                        reg = reg | (i.numval() << shifts[j])
+                    else:
+                        if reg in regs32.keys():
+                            while len(expr.a) > 1:
+                                expr.a.pop_back()
+                            expr.a[0].n.nf.flags = idaapi.enumflag()
+                            expr.a[0].n.nf.serial = 0
+                            expr.a[0].n.nf.type_name = self.mkenu32()
+                            expr.a[0].n._value = reg
+                if expr.x.helper == "__mcr" and len(expr.a) == 6: # and not idaapi.getseg(expr.ea).use64():
+                    reg = 0
+                    for j, i in enumerate(expr.a):
+                        if shiftz[j] < 0:
+                            continue
+                        if i.type != inttype:
+                            break
+                        reg = reg | (i.numval() << shiftz[j])
+                    else:
+                        if reg in regs32.keys():
+                            while len(expr.a) > 3:
+                                expr.a.pop_back()
+                            expr.a[1] = expr.a[2]
+                            expr.a.pop_back()
+                            expr.a[0].n.nf.flags = idaapi.enumflag()
+                            expr.a[0].n.nf.serial = 0
+                            expr.a[0].n.nf.type_name = self.mkenu32()
+                            expr.a[0].n._value = reg
         except:
             traceback.print_exc()
         return 0
+
+    def mkenu64(self):
+        global myenum64
+        if myenum64 is None:
+            myenum64 = "ARM64_SYSREG_aenum"
+            enu = idaapi.add_enum(0, myenum64, 0)
+            for i in regs64.keys():
+                idaapi.add_enum_member(enu, regs64[i], i)
+        return myenum64
+
+    def mkenu32(self):
+        global myenum32
+        if myenum32 is None:
+            myenum32 = "ARM32_SYSREG_aenum"
+            enu = idaapi.add_enum(0, myenum32, 0)
+            for i in regs32.keys():
+                idaapi.add_enum_member(enu, regs32[i], i)
+        return myenum32
 
 class hexrays_callback_info(object):
     def __init__(self):
@@ -649,7 +904,7 @@ def remove():
 
 class HexHNightPlugin_t(idaapi.plugin_t):
     flags = idaapi.PLUGIN_HIDE
-    comment = "show symbolic names for ARM64_SYSREG in Pseudocode-View"
+    comment = "show symbolic names for ARM sysregs in Pseudocode-View"
     help = "Runs transparently"
     wanted_name = "HexNight"
     wanted_hotkey = ""
@@ -658,11 +913,8 @@ class HexHNightPlugin_t(idaapi.plugin_t):
         # Some initialization
         global hexnight_cb_info, hexnight_cb, inttype
 
-        if idaapi.init_hexrays_plugin() and idaapi.ph_get_id() == idaapi.PLFM_ARM and idaapi.BADADDR > 0xFFFFFFFF:
+        if idaapi.init_hexrays_plugin() and idaapi.ph_get_id() == idaapi.PLFM_ARM:
             inttype = idaapi.get_int_type_by_width_and_sign(4, True)
-            enu = idaapi.add_enum(0, myenum, 0)
-            for i in regs.keys():
-                idaapi.add_enum_member(enu, regs[i], i)
             hexnight_cb_info = hexrays_callback_info()
             hexnight_cb = hexnight_cb_info.event_callback
             if idaapi.install_hexrays_callback(hexnight_cb):
