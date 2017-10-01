@@ -13,6 +13,40 @@ hexnight_cb = None
 
 # generated from capstone/arch/AArch64/AArch64BaseInfo.h
 regs64 = {
+    # Apple specific
+    0xc780 : "HID0",
+    0xc781 : "EHID0",
+    0xc788 : "HID1",
+    0xc790 : "HID2",
+    0xc798 : "HID3",
+    0xc799 : "EHID3",
+    0xc7a0 : "HID4",
+    0xc7a8 : "HID5",
+    0xc7a9 : "EHID5",
+    0xc7b0 : "HID6",
+    0xc7b8 : "HID7",
+    0xc7c0 : "HID8",
+    0xc7c8 : "HID9",
+    0xc7d0 : "HID10",
+    0xc7e8 : "HID11",
+    0xc7d8 : "HID11",
+    0xc7d9 : "EHID11",
+    0xefa0 : "CYC_CFG",
+    0xefb0 : "ACC_OVRD",
+    0xefa8 : "CYC_OVRD",
+    0xdf80 : "LSU_ERR_STS",
+    0xdf90 : "E_LSU_ERR_STS",
+    0xdf88 : "LSU_ERR_CTL",
+    0xf780 : "MMU_ERR_STS",
+    0xf790 : "E_MMU_ERR_STS",
+    0xdfc0 : "L2C_ERR_STS",
+    0xdfc8 : "L2C_ERR_ADR",
+    0xdfd0 : "L2C_ERR_INF",
+    0xe784 : "MIGSTS_EL1",
+    0xe793 : "KTRR_LOWER_EL1",
+    0xe794 : "KTRR_UPPER_EL1",
+    0xe792 : "KTRR_LOCK_EL1",
+    # end of Apple specific
                                   # Op0 Op1  CRn   CRm   Op2
     0x9808 : "MDCCSR_EL0",        # 10  011  0000  0001  000
     0x9828 : "DBGDTRRX_EL0",      # 10  011  0000  0101  000
