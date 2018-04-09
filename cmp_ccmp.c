@@ -185,7 +185,7 @@ int
 main(void)
 {
         /*
-        CMP             W10, W9
+        CMP             W12, W9
         CCMP            W2, #0, #0, HI
         B.EQ            label
         */
