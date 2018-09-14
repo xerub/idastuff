@@ -158,6 +158,11 @@ static size_t ana_pac(insn_t *insn)
 			int M = (d >> 10) & 1;
 			insn->insnpref = pac_RETAA + M;
 			insn->itype = ARM_ret;
+			insn->segpref = 14;
+			insn->Op1.type = o_reg;
+			insn->Op1.reg = 30 + 129;
+			insn->Op1.dtype = dt_qword;
+			insn->Op1.flags = 0;
 			return 4;
 		}
 		if ((d & 0xfedff800) == 0xd61f0800) {
@@ -192,6 +197,7 @@ static size_t ana_pac(insn_t *insn)
 			int M = (d >> 10) & 1;
 			insn->insnpref = pac_ERETAA + M;
 			insn->itype = ARM_eret;
+			insn->segpref = 14;
 			return 4;
 		}
 		if ((d & 0xff200400) == 0xf8200400) {
