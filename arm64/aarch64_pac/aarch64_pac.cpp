@@ -66,7 +66,7 @@ static size_t ana_pac(insn_t *insn)
 {
 	ea_t ea = insn->ea;
 	if (is_arm64_ea(ea)) {
-		unsigned d = get_dword(ea);
+		unsigned d = get_32bit(ea);
 		if ((d & 0xffffc000) == 0xdac10000) {
 			int m = (d >> 10) & 7;
 			int Z = (d >> 13) & 1;
