@@ -62,7 +62,7 @@ static const char *pac_tab[] = {
 	"LDRAA", "LDRAB",
 };
 
-static size_t ana_pac(insn_t *insn)
+static size_t ana(insn_t *insn)
 {
 	ea_t ea = insn->ea;
 	if (is_arm64_ea(ea)) {
@@ -226,16 +226,6 @@ static size_t ana_pac(insn_t *insn)
 	return 0;
 }
 
-static size_t ana(insn_t *insn)
-{
-	size_t sz;
-	sz = ana_pac(insn);
-	if (sz) {
-		return sz;
-	}
-	return 0;
-}
-
 static long idaapi aarch64_extension_callback(void * user_data, int event_id, va_list va)
 {
 	switch (event_id) {
@@ -292,14 +282,14 @@ int idaapi init(void)
 	if (ph.id != PLFM_ARM) return PLUGIN_SKIP;
 	addon_info_t *addon = new(addon_info_t);
 	addon->id = "org.xerub.pac";
-	addon->name = "Aaarch64 PAC";
+	addon->name = "AArch64 PAC";
 	addon->producer = "xerub";
 	addon->url = "xerub@protonmail.com";
 	addon->version = "7.0";
 	register_addon(addon);
 	if (enabled) {
 		hook_to_notification_point(HT_IDP, aarch64_extension_callback, NULL);
-		msg("AArch64 PAC is enabled\n");
+		msg("AArch64 PAC extension is enabled\n");
 		return PLUGIN_KEEP;
 	}
 	return PLUGIN_OK;
@@ -319,7 +309,7 @@ bool idaapi run(size_t /*arg*/)
 		hook_to_notification_point(HT_IDP, aarch64_extension_callback, NULL);
 	}
 	enabled = !enabled;
-	info("AUTOHIDE NONE\n" "AArch64 PAC is now %sabled", enabled ? "en" : "dis");
+	info("AUTOHIDE NONE\n" "AArch64 PAC extension is now %sabled", enabled ? "en" : "dis");
 	refresh_idaview_anyway();
 	return true;
 }
@@ -332,8 +322,8 @@ plugin_t PLUGIN = {
 	init,
 	term,
 	run,
-	"ARM v8.3-A Pointer Authentication instructions", // comment
-	"Just works when enabled", // help
-	"Aarch64PAC", // name
+	"ARM v8.3-A Pointer Authentication extension", // comment
+	"Runs transparently", // help
+	"Aarch64 PAC", // name
 	"Ctrl-Alt-Shift-A" // hotkey
 };
