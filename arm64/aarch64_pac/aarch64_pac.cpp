@@ -244,28 +244,29 @@ static long idaapi aarch64_extension_callback(void * user_data, int event_id, va
 			if (insn->insnpref) {
 				int pri = insn->itype;
 				int sec = insn->insnpref;
+				const int indent = 16;
 				if (pri == ARM_hint && sec >= pac_PACIASP && sec <= pac_XPACD) {
-					ctx->out_custom_mnem(pac_tab[sec - 1]);
+					ctx->out_custom_mnem(pac_tab[sec - 1], indent);
 					return 2;
 				}
 				if (pri == ARM_ret && sec >= pac_RETAA && sec <= pac_RETAB) {
-					ctx->out_custom_mnem(pac_tab[sec - 1]);
+					ctx->out_custom_mnem(pac_tab[sec - 1], indent);
 					return 2;
 				}
 				if (pri == ARM_br && sec >= pac_BRAA && sec <= pac_BRABZ) {
-					ctx->out_custom_mnem(pac_tab[sec - 1]);
+					ctx->out_custom_mnem(pac_tab[sec - 1], indent);
 					return 2;
 				}
 				if (pri == ARM_blr && sec >= pac_BLRAA && sec <= pac_BLRABZ) {
-					ctx->out_custom_mnem(pac_tab[sec - 1]);
+					ctx->out_custom_mnem(pac_tab[sec - 1], indent);
 					return 2;
 				}
 				if (pri == ARM_eret && sec >= pac_ERETAA && sec <= pac_ERETAB) {
-					ctx->out_custom_mnem(pac_tab[sec - 1]);
+					ctx->out_custom_mnem(pac_tab[sec - 1], indent);
 					return 2;
 				}
 				if (pri == ARM_ldr && sec >= pac_LDRAA && sec <= pac_LDRAB) {
-					ctx->out_custom_mnem(pac_tab[sec - 1]);
+					ctx->out_custom_mnem(pac_tab[sec - 1], indent);
 					return 2;
 				}
 			}
