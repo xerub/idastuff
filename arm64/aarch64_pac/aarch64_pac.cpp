@@ -25,6 +25,19 @@
 #include <allins.hpp>
 #include <segregs.hpp>
 
+/*
+ * Fix for decompiler analysis:
+ * Copyright (c) 2018 Eloi Benoist-Vanderbeken - Synacktiv
+ * https://github.com/Synacktiv/kernelcache-laundering/blob/master/aarch64_pac.py
+ */
+#define CONVERT_INSN 1
+
+#ifdef CONVERT_INSN
+#define ARM64_PAC_I ARM_hlt	// op1=io, op2=in, op3=in
+#else
+#define ARM64_PAC_I ARM_hint	// op1=in
+#endif
+
 inline bool is_arm64_ea(ea_t ea)
 {
 	segment_t *seg = getseg(ea);
@@ -73,7 +86,7 @@ static size_t ana(insn_t *insn)
 			int Xn = (d >> 5) & 0x1F;
 			int Xd = d & 0x1F;
 			if (Z == 0) {
-				insn->itype = ARM_hint;
+				insn->itype = ARM64_PAC_I;
 				insn->segpref = 14;
 				insn->Op1.type = o_reg;
 				insn->Op1.reg = Xd + 129;
@@ -82,14 +95,22 @@ static size_t ana(insn_t *insn)
 				insn->Op2.reg = Xn + 129;
 				insn->Op2.dtype = dt_qword;
 				insn->Op2.flags = OF_SHOW;
+#ifdef CONVERT_INSN
+				insn->Op3 = insn->Op1;
+				insn->Op3.flags = 0;
+#endif
 				insn->insnpref = pac_PACIA + m;
 				return 4;
 			} else if (Xn == 31) {
-				insn->itype = ARM_hint;
+				insn->itype = ARM64_PAC_I;
 				insn->segpref = 14;
 				insn->Op1.type = o_reg;
 				insn->Op1.reg = Xd + 129;
 				insn->Op1.dtype = dt_qword;
+#ifdef CONVERT_INSN
+				insn->Op2 = insn->Op1;
+				insn->Op2.flags = 0;
+#endif
 				insn->insnpref = pac_PACIZA + m;
 				return 4;
 			}
@@ -99,21 +120,53 @@ static size_t ana(insn_t *insn)
 			int CRm = (d >> 9) & 1;
 			int op2 = (d >> 5) & 1;
 			if (CRm == 0) {
-				insn->itype = ARM_hint;
+				insn->itype = ARM64_PAC_I;
 				insn->segpref = 14;
+#ifdef CONVERT_INSN
+				insn->Op1.type = o_reg;
+				insn->Op1.reg = 17 + 129;
+				insn->Op1.dtype = dt_qword;
+				insn->Op1.flags = 0;
+				insn->Op2.type = o_reg;
+				insn->Op2.reg = 16 + 129;
+				insn->Op2.dtype = dt_qword;
+				insn->Op2.flags = 0;
+				insn->Op3 = insn->Op1;
+#else
 				insn->Op1.type = o_void;
+#endif
 				insn->insnpref = pac_PACIA1716 + m;
 				return 4;
 			} else if (op2) {
-				insn->itype = ARM_hint;
+				insn->itype = ARM64_PAC_I;
 				insn->segpref = 14;
+#ifdef CONVERT_INSN
+				insn->Op1.type = o_reg;
+				insn->Op1.reg = 30 + 129;
+				insn->Op1.dtype = dt_qword;
+				insn->Op1.flags = 0;
+				insn->Op2.type = o_reg;
+				insn->Op2.reg = 31 + 129;
+				insn->Op2.dtype = dt_qword;
+				insn->Op2.flags = 0;
+				insn->Op3 = insn->Op1;
+#else
 				insn->Op1.type = o_void;
+#endif
 				insn->insnpref = pac_PACIASP + m;
 				return 4;
 			} else {
-				insn->itype = ARM_hint;
+				insn->itype = ARM64_PAC_I;
 				insn->segpref = 14;
+#ifdef CONVERT_INSN
+				insn->Op1.type = o_reg;
+				insn->Op1.reg = 30 + 129;
+				insn->Op1.dtype = dt_qword;
+				insn->Op1.flags = 0;
+				insn->Op2 = insn->Op1;
+#else
 				insn->Op1.type = o_void;
+#endif
 				insn->insnpref = pac_PACIAZ + m;
 				return 4;
 			}
@@ -122,7 +175,7 @@ static size_t ana(insn_t *insn)
 			int Xm = (d >> 16) & 0x1F;
 			int Xn = (d >> 5) & 0x1F;
 			int Xd = d & 0x1F;
-			insn->itype = ARM_hint;
+			insn->itype = ARM64_PAC_I;
 			insn->segpref = 14;
 			insn->Op1.type = o_reg;
 			insn->Op1.reg = Xd + 129;
@@ -139,18 +192,30 @@ static size_t ana(insn_t *insn)
 		if ((d & 0xfffffbe0) == 0xdac143e0) {
 			int D = (d >> 10) & 1;
 			int Xd = d & 0x1F;
-			insn->itype = ARM_hint;
+			insn->itype = ARM64_PAC_I;
 			insn->segpref = 14;
 			insn->Op1.type = o_reg;
 			insn->Op1.reg = Xd + 129;
 			insn->Op1.dtype = dt_qword;
+#ifdef CONVERT_INSN
+			insn->Op2 = insn->Op1;
+			insn->Op2.flags = 0;
+#endif
 			insn->insnpref = pac_XPACI + D;
 			return 4;
 		}
 		if (d == 0xd50320ff) {
-			insn->itype = ARM_hint;
+			insn->itype = ARM64_PAC_I;
 			insn->segpref = 14;
+#ifdef CONVERT_INSN
+			insn->Op1.type = o_reg;
+			insn->Op1.reg = 30 + 129;
+			insn->Op1.dtype = dt_qword;
+			insn->Op1.flags = 0;
+			insn->Op2 = insn->Op1;
+#else
 			insn->Op1.type = o_void;
+#endif
 			insn->insnpref = pac_XPACLRI;
 			return 4;
 		}
@@ -245,7 +310,7 @@ static long idaapi aarch64_extension_callback(void * user_data, int event_id, va
 				int pri = insn->itype;
 				int sec = insn->insnpref;
 				const int indent = 16;
-				if (pri == ARM_hint && sec >= pac_PACIASP && sec <= pac_XPACD) {
+				if (pri == ARM64_PAC_I && sec >= pac_PACIASP && sec <= pac_XPACD) {
 					ctx->out_custom_mnem(pac_tab[sec - 1], indent);
 					return 2;
 				}
